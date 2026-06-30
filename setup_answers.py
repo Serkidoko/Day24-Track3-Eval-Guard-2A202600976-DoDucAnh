@@ -82,7 +82,8 @@ def run_query(q: str, search, reranker, top_k: int) -> tuple[str, list[str]]:
     reranked = reranker.rerank(q, docs, top_k=top_k)
     contexts = [r.text for r in reranked] if reranked else [r.text for r in results[:3]]
 
-    if OPENAI_API_KEY and contexts:
+    use_openai_generation = os.getenv("USE_OPENAI_GENERATION") == "1"
+    if use_openai_generation and OPENAI_API_KEY and contexts:
         try:
             from openai import OpenAI
             client = OpenAI()
